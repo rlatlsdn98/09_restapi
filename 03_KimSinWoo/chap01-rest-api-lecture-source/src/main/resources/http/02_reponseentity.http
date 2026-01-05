@@ -1,0 +1,28 @@
+### 2-1. 모든 유저 조회
+GET {{baseUrl}}/entity/users
+
+### 2-2 유저 조회
+GET {{baseUrl}}/entity/users/4
+
+### 2-3 유저 등록
+POST {{baseUrl}}/entity/users
+Content-Type: application/json
+
+{
+  "id": "sinwooID",
+  "pwd": "1234pwd",
+  "name": "sinwooName"
+}
+
+### 2-4 유저 정보 수정
+PUT http://localhost:8080/entity/users/4
+Content-Type: application/json
+
+{
+  "id": "modified",
+  "pwd": "1234pwdmodi",
+  "name": "sinwooNamemodified"
+}
+
+### 2-5 유저 삭제
+DELETE http://localhost:8080/entity/users/4
