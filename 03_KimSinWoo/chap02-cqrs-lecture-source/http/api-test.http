@@ -1,0 +1,82 @@
+### 상품 상세 조회
+GET http://localhost:8080/products/182
+Accept: application/json # 응답 데이터의 형식을 지정
+
+### 상품 목록 조회 - 1페이지 10개, 조건 X
+GET http://localhost:8080/products
+
+### 상품 목록 조회 - 2페이지 10개, 조건 X
+GET http://localhost:8080/products?page=2
+
+### 상품 목록 조회 - 1페이지, 5개씩, categoryCode = 1
+GET http://localhost:8080/products?page=1&size=5&categoryCode=1
+
+### 상품 목록 조회 - 1페이지, 5개씩, categoryCode = 1, name = %밥%
+GET http://localhost:8080/products?page=1&size=5&categoryCode=1&productName=밥
+
+### 상품 등록
+POST http://localhost:8080/products
+Content-Type: application/json # 요청시 전달하는 데이터가 JSON임을 명시
+
+{
+  "productName": "짱큰햄버거",
+  "productDescription": "커다란 햄버거",
+  "categoryCode": 1,
+  "productPrice": 50000,
+  "productStock": 23
+}
+
+
+### 상품 등록
+# @RequestPart를 사용하여 JSON과 파일을 함께 전송
+# 주의: 테스트를 실행하려면 http 폴더 내에 'sample.png' 파일이 존재해야 함
+# boundary=boundary: 각 데이터 조각(Part)을 구분하기 위한 구분자 문자열을 정의
+POST http://localhost:8080/products
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="productCreateRequest"
+Content-Type: application/json
+
+{
+  "productName": "안녕하세요",
+  "productPrice": 25000,
+  "productDescription": "API 테스트를 통해 등록되는 상품입니다.",
+  "categoryCode": 1,
+  "productStock": 100
+}
+--boundary
+Content-Disposition: form-data; name="productImg"; filename="sample.png"
+Content-Type: image/png
+
+< ./sample.png
+--boundary--
+
+### 상품 수정
+# @RequestPart를 사용하므로 multipart/form-data로 전송
+# productImg는 required=false 이므로, 이미지를 수정하지 않을 경우 해당 파트를 생략해도 됨
+PUT http://localhost:8080/products/23
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="productUpdateRequest"
+Content-Type: application/json
+
+{
+  "productName": "수정된 상품명",
+  "productPrice": 30000,
+  "productDescription": "상품 정보가 수정되었습니다.",
+  "categoryCode": 2,
+  "productStock": 50,
+  "status": "USABLE"
+}
+--boundary
+Content-Disposition: form-data; name="productImg"; filename="sample.png"
+Content-Type: image/png
+
+< ./sample.png
+--boundary--
+
+
+### 상품 삭제 (soft delete)
+DELETE http://localhost:8080/products/23
