@@ -1,0 +1,76 @@
+### 회원가입
+POST http://localhost:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "username": "user01",
+  "password": "password01"
+}
+
+> {%
+    client.global.clearAll();
+ %}
+
+### 로그인
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "user01",
+  "password": "password01"
+}
+
+> {%
+    // 로그인 결과(응답) 중 accessToken을 auth_token 변수에 저장
+    client.global.set("auth_token", response.body.data.accessToken);
+ %}
+
+
+### 로그인한 회원 정보 조회
+GET http://localhost:8080/api/v1/users/me
+Authorization: Bearer {{auth_token}}
+Accept: application/json
+
+### 토큰 없이 정보 조회
+GET http://localhost:8080/api/v1/users/me
+Accept: application/json
+
+### 토큰 재발급
+POST http://localhost:8080/api/v1/auth/refresh
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### 로그아웃
+POST http://localhost:8080/api/v1/auth/logout
+Authorization: Bearer {{auth_token}}
+
+### 테스트
+GET http://localhost:8080/api/v1/auth/test
+Authorization: Bearer {{auth_token}}
+
+### 관리자 회원 가입
+POST http://localhost:8080/api/v1/admin
+Content-Type: application/json
+
+{
+  "username": "admin01",
+  "password": "pass01"
+}
+
+
+### 관리자 로그인
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin01",
+  "password": "pass01"
+}
+
+> {%
+    client.global.set("admin_token", response.body.data.accessToken);
+%}
+
+### 전체 회원 조회(관리자)
+GET http://localhost:8080/api/v1/admin/users
+Authorization: Bearer {{admin_token}}
